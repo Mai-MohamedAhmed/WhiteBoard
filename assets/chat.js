@@ -1,6 +1,8 @@
+
 var room
 var name
 var socket=io.connect();
+var Color,Width
 paper.install(window);
 window.onload = function() {
 
@@ -40,11 +42,12 @@ window.onload = function() {
          saturation: 1,
          brightness: 1
          };*/
-        path.strokeColor = 'red';
+        path.strokeColor = Color;
+		path.strokeWidth=Width;
         path.add(event.point);
         //event.preventDefault();
         //console.log("Sent room = " +room);
-        socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"room":room});
+        socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"room":room});
     }
 
     tool.onMouseDrag = function(event) {
@@ -52,13 +55,13 @@ window.onload = function() {
         path.smooth();
         event.preventDefault();
 
-        socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor ,"room":room});
+        socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth ,"room":room});
 
     }
     tool.onMouseUp= function(event) {
         path.add(event.point);
         var p = path.exportJSON();
-        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"room":room,"path":p});
+        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"room":room,"path":p});
         path.smooth();
         console.log('sending end point' + event.point.x +' '+  event.point.y);
     }
@@ -66,6 +69,7 @@ window.onload = function() {
     socket.on('newDrawing',function(data){
         Otherpaths[data.ID]=new Path();
         Otherpaths[data.ID].strokeColor = data.Color;
+        Otherpaths[data.ID].strokeWidth = data.Width;
         Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
         Otherpaths[data.ID].smooth();
         view.draw();
@@ -73,12 +77,14 @@ window.onload = function() {
     socket.on('ContinueDrawing',function(data){
 
         Otherpaths[data.ID].strokeColor = data.Color;
+		Otherpaths[data.ID].strokeWidth = data.Width;
         Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
         Otherpaths[data.ID].smooth();
         view.draw();
     });
     socket.on('StopDrawing',function(data){
         Otherpaths[data.ID].strokeColor = data.Color;
+		Otherpaths[data.ID].strokeWidth = data.Width;
         Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
         Otherpaths[data.ID].smooth();
         view.draw();
@@ -98,6 +104,11 @@ window.onload = function() {
 
 
 }
+function erase() {
+	Color="White"
+	Width=20
+}
+
 
 socket.on('chatMessage', function (from, msg,room) {
     var me = $('#user').text();
@@ -132,7 +143,6 @@ socket.on('room', function (roomid) {
 });
 
 
-
 function submitfunction(){
     var from = $('#user').text();
     var message= $('#m').val();
@@ -158,10 +168,3 @@ function makeid() {
     }
     return text;
 }
-
-
-
-
-
-
-
