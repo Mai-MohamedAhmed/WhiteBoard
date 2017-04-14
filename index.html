@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" class="no-js">
+
+<script type="text/javascript" src="/assets/js/css-pop.js"></script>
+<script type="text/javascript" src="/assets/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="/assets/js/main.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.js"></script>
+<!--<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<script type="text/javascript" src="/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/assets/js/modernizr.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.24/paper-full.min.js"></script>
+<!--
+<script type="text/javascript" src="/assets/js/drawing.js"></script>
+-->
+
+
+<link type="text/css" rel="stylesheet" href="/assets/css/bootstrap.min.css">
+<!--<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+<link type="text/css" rel="stylesheet" href="/assets/css/button.css">
+<link type="text/css" rel="stylesheet" href="/assets/css/canvas.css">
+<link type="text/css" rel="stylesheet" href="/assets/css/chat.css">
+<link type="text/css" rel="stylesheet" href="/assets/css/reset.css">
+<link type="text/css" rel="stylesheet" href="/assets/css/style.css">
+<link type="text/css" rel="stylesheet" href="/assets/css/simple-sidebar.css" >
+
+
+
+
+
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+
+
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">  	
+	<title>Awesome Whiteboard</title>
+</head>
+<body >
+		
+
+		<div id="welcome_popup"> 
+
+			 <label>Name: </label>
+			 	<input type="text" name="name" id="um" class="inName">
+			 	<button type="submit" class="btn btn-default" id="sub" >Submit</button>
+		</div>
+
+		<div id="welcome_cover" > </div> 
+		 <div id="popup"> 
+			 <p id="url"></p>
+		  <a href="#" class="cancel">&times;</a> </div> 
+		<div id="cover" > </div> 
+
+		
+
+<canvas id="myCan" class="myCanvas" width="200" height="100" >
+</canvas>
+		
+
+	<nav class="cd-stretchy-nav hvr-grow">
+
+		<a class="cd-nav-trigger " href="#0">
+			<span aria-hidden="true"></span>
+		</a>
+
+		<ul>
+			<li><a href="#popup"><span>Share Room</span></a></li>
+			<li><a href="#0" class="menu-toggle"><span>Chat</span></a></li>
+			<li><a id="downloadLnk" download="YourDrawing.png"><span>Save Board</span></a></li>
+		</ul>
+
+		<span aria-hidden="true" class="stretchy-nav-bg"></span>
+	</nav>
+	<button type="button" class="btn btn-success btn-circle btn-xl " style=" right: 15%;"><i class="glyphicon glyphicon-pencil"></i></button>
+	<button type="button" class="btn btn-success btn-circle btn-xl "  style=" right: 9%;"><img src="/assets/eraser.svg" alt="Mountain View"></button>
+
+		<div id="wrapper">
+							
+
+		        <!-- Sidebar -->
+		        <div id="sidebar-wrapper" >
+
+							
+							<ul class="sidebar-nav"> 
+				                <li class="sidebar-brand">
+				                	<h id="user"></h>
+				                   <a href="#" class="menu-toggle" style="display: inline-block;"><span class="glyphicon glyphicon-chevron-left"></span></a>
+				                </li>
+				            </ul>
+						
+						    <ol id="messages" class="chat">
+
+
+						    </ol>
+						   <!-- <form >-->
+						    <input class="textarea" type="text" id="m" value="" placeholder="Type here!"/>
+						    <button type="button" onclick="return submitfunction();" class="btn btn-default send" ><span class="glyphicon glyphicon-send" > </span></button>
+							<!--</form>-->
+		    
+		      		  </div>
+		        </div>
+  
+</body>
+</html>
+
+<script type="text/javascript">
+
+
+
+    $(".menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+
+document.getElementById("downloadLnk").addEventListener("click", function() {
+  
+	var canvas = document.getElementById('myCan');
+	var dt = canvas.toDataURL();
+    	document.getElementById("downloadLnk").href = dt;	
+},false);
+
+</script>
+<script type="text/javascript" src="/assets/chat.js"></script>
+
+

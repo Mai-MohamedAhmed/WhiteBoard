@@ -1,0 +1,83 @@
+.myCanvas{
+border:1px solid white;
+background-color: white;
+position: absolute;
+height: 1000px;
+z-index: -1;
+}
+
+body{
+	padding: 0px;
+	position: relative;
+}
+
+#welcome_cover{
+	position:fixed; top:0; left:0; background:rgba(0,0,0,0.6); z-index:9000; width:100%; height:100%; display:block; 
+	
+}
+#welcome_popup{
+	height:100px; 
+	width:340px;
+	 top:250px;
+	 left:500px;
+	  position:absolute;
+	  z-index:9001; 
+	  display:block; 
+	  background-color: white;
+	   border:5px solid #cccccc;
+	    border-radius:10px; 
+	    position: fixed;
+	 padding: 10px;
+	 padding-top: 30px;
+	 text-align: left;
+}
+
+.welcome_cancel { display:block;
+ position:absolute;
+  top:3px; right:2px; 
+  background:rgb(245,245,245);
+   color:black; height:30px;
+    width:35px; font-size:30px;
+     text-decoration:none; text-align:center; 
+     font-weight:bold; 
+ }
+ .welcome_cancel:hover {
+ 	color:#9acd91;
+ } 
+
+
+#cover{ position:fixed; top:0; left:0; background:rgba(0,0,0,0.6); z-index:9000; width:100%; height:100%; display:none; }
+#popup { height:100px; 
+	width:340px;
+	 top:250px;
+	 left:500px;
+	  position:relative; 
+	  z-index:9001; 
+	  display:none; 
+	  background-color: white;
+	   border:5px solid #cccccc;
+	    border-radius:10px; 
+	    position: fixed;
+	 padding: 10px;
+	 padding-top: 30px;
+	 text-align: left;
+	}
+#popup:target, #popup:target + #cover{ display:block; opacity:2; } 
+.cancel { display:block;
+ position:absolute;
+  top:3px; right:2px; 
+  background:rgb(245,245,245);
+   color:black; height:30px;
+    width:35px; font-size:30px;
+     text-decoration:none; text-align:center; 
+     font-weight:bold; 
+ }
+ .cancel:hover {
+ 	color:#9acd91;
+ } 
+
+ #user{
+ 	display: inline-block;
+ 	font-size: 25px;
+ 	color: white;
+ }
