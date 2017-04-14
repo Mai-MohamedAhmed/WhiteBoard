@@ -108,7 +108,10 @@ function erase() {
 	Color="White"
 	Width=20
 }
-
+function pencil() {
+	Color="black"
+	Width=1
+}
 
 socket.on('chatMessage', function (from, msg,room) {
     var me = $('#user').text();
