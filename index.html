@@ -75,7 +75,7 @@
 		<span aria-hidden="true" class="stretchy-nav-bg"></span>
 	</nav>
 	<button type="button" class="btn btn-success btn-circle btn-xl " style=" right: 15%;"><i class="glyphicon glyphicon-pencil"></i></button>
-	<button type="button" class="btn btn-success btn-circle btn-xl "  style=" right: 9%;"><img src="/assets/eraser.svg" alt="Mountain View"></button>
+	<button onclick="erase()" type="button" class="btn btn-success btn-circle btn-xl "  style=" right: 9%;"><img src="/assets/eraser.svg" alt="Mountain View"></button>
 
 		<div id="wrapper">
 							
@@ -105,10 +105,12 @@
   
 </body>
 </html>
-
+<p id="demo"></p>
 <script type="text/javascript">
 
-
+function erase() {
+    document.getElementById("demo").innerHTML = "Hello World";
+}
 
     $(".menu-toggle").click(function(e) {
         e.preventDefault();
