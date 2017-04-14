@@ -43,7 +43,7 @@ window.onload = function() {
         path.strokeColor = 'red';
         path.add(event.point);
         //event.preventDefault();
-        console.log("Sent room = " +room);
+        //console.log("Sent room = " +room);
         socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"room":room});
     }
 
@@ -58,8 +58,9 @@ window.onload = function() {
     tool.onMouseUp= function(event) {
         path.add(event.point);
         var p = path.exportJSON();
-        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor, "room":room, "path":p});
+        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"room":room,"path":p});
         path.smooth();
+        console.log('sending end point' + event.point.x +' '+  event.point.y);
     }
 
     socket.on('newDrawing',function(data){
@@ -81,15 +82,16 @@ window.onload = function() {
         Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
         Otherpaths[data.ID].smooth();
         view.draw();
-        delete Otherpaths[sessionId];
+        delete Otherpaths[data.ID];
     });
 
-    socket.on('savedPaths',function(data){
+    socket.on('savedPaths',function(data,room_id){
 
         var p = new Path();
         p.importJSON(data);
         project.activeLayer.addChild(p);
         view.draw();
+        console.log('received path from room id '+ room_id);
 
 
     });
@@ -121,13 +123,14 @@ socket.on('notifyUser', function(user,room){
 socket.on('room', function (roomid) {
     room=roomid;
     //alert(room)
-    console.log('sent room id')
+    console.log('received room id' + roomid)
     $('#url').text("http://localhost:3000/room/"+room);
     /*var u= $('#um').val();
     var s = u + 'joined the room';
     socket.emit('chatMessage','system',s,room);*/
 
 });
+
 
 
 function submitfunction(){
