@@ -15,10 +15,8 @@ var rooms =[];
 var req_id="newroom";
 
 var express=require('express');
-app.use(express.static(path.join(__dirname),'/assets'));
-//app.use(express.static('public'));
-
-app.get('/newroom', function(req, res){
+app.get('/', function(req, res){
+    app.use(express.static(path.join(__dirname),'/assets'));
 
    req_id="newroom";
    console.log('new request, req id= '+ req_id);
@@ -27,9 +25,10 @@ app.get('/newroom', function(req, res){
 });
 
 app.get('/room/:roomid', function(req, res){
+    app.use(express.static(path.join(__dirname),'/assets'));
 
     req_id=req.params.roomid;
-        console.log('existing req_id is null' + req_id );
+        console.log('existing req_id is null ' + req_id );
     var x= false;
     for(i=0; i<rooms.length; i++){
         if(rooms[i]===req_id){
