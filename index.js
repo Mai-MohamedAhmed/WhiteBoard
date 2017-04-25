@@ -20,7 +20,7 @@ app.get('/', function(req, res){
 
    req_id="newroom";
    console.log('new request, req id= '+ req_id);
-    res.sendFile(path.join(__dirname, '../chat-app', '/index.html'));
+    res.sendFile(path.join(__dirname, '../repo', '/index.html'));
 
 });
 
@@ -37,7 +37,7 @@ app.get('/room/:roomid', function(req, res){
         }
     }
     if(x){
-        res.sendFile(path.join(__dirname, '../chat-app', '/index.html'));
+        res.sendFile(path.join(__dirname, '../repo', '/index.html'));
     }else{
         res.send("the requested room doesn't exist");
     }
