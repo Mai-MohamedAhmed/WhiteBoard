@@ -113,19 +113,19 @@ io.on('connection', function(socket){
 
     socket.on('StartingPoint',function(data){
 
-        io.sockets.in(data.room).emit('newDrawing', data);
+        socket.in(data.room).broadcast.emit('newDrawing', data);
 
 
     });
     socket.on('Continue',function(data){
 
-        io.sockets.in(data.room).emit('ContinueDrawing', data);
+        socket.in(data.room).broadcast.emit('ContinueDrawing', data);
 
 
     });
     socket.on('EndPoint',function(data){
         
-        io.sockets.in(data.room).emit('StopDrawing', data);
+        socket.in(data.room).broadcast.emit('StopDrawing', data);
 
         console.log('received end point');
         MongoClient.connect(url, function(err, db) {
