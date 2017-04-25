@@ -113,10 +113,12 @@
     });
 
 document.getElementById("downloadLnk").addEventListener("click", function() {
-  
+  	
 	var canvas = document.getElementById('myCan');
+	
 	var dt = canvas.toDataURL();
-    	document.getElementById("downloadLnk").href = dt;	
+	
+    document.getElementById("downloadLnk").href = dt;	
 },false);
 
 </script>

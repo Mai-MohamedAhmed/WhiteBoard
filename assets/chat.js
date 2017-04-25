@@ -6,7 +6,7 @@ var Color,Width
 paper.install(window);
 window.onload = function() {
 
-    $("#sub").click(function(e) {
+	$("#sub").click(function(e) {
 
         var n= $('#um').val();
         if(n=='')
@@ -18,6 +18,7 @@ window.onload = function() {
         document.getElementById('welcome_cover').style.display='none';
 
     });
+	
 
     name= $('#um').val();
     var ID;
