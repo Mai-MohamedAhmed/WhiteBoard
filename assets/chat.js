@@ -6,6 +6,7 @@ var Color,Width
 paper.install(window);
 window.onload = function() {
 
+	//get user name from prompt
 	$("#sub").click(function(e) {
 
         var n= $('#um').val();
@@ -13,13 +14,12 @@ window.onload = function() {
             n=makeid();
 
         $('#user').text(n);
-        //socket.emit('newUser', n);*/
         document.getElementById('welcome_popup').style.display='none';
         document.getElementById('welcome_cover').style.display='none';
 
     });
 	
-
+ //set client name to the entered value 
     name= $('#um').val();
     var ID;
     socket.on('connect', function(){
@@ -47,8 +47,7 @@ window.onload = function() {
 		path.strokeWidth=Width;
         path.add(event.point);
         //event.preventDefault();
-        //console.log("Sent room = " +room);
-        socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"room":room});
+        socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth});
     }
 
     tool.onMouseDrag = function(event) {
@@ -56,13 +55,13 @@ window.onload = function() {
         path.smooth();
         event.preventDefault();
 
-        socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth ,"room":room});
+        socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth });
 
     }
     tool.onMouseUp= function(event) {
         path.add(event.point);
         var p = path.exportJSON();
-        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"room":room,"path":p});
+        socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"path":p});
         path.smooth();
         console.log('sending end point' + event.point.x +' '+  event.point.y);
     }
@@ -92,13 +91,13 @@ window.onload = function() {
         delete Otherpaths[data.ID];
     });
 
-    socket.on('savedPaths',function(data,room_id){
+    socket.on('savedPaths',function(data){
 
         var p = new Path();
         p.importJSON(data);
         project.activeLayer.addChild(p);
         view.draw();
-        console.log('received path from room id '+ room_id);
+        console.log('received path from room id '+ socket.room);
 
 
     });
@@ -114,12 +113,12 @@ function pencil() {
 	Width=1
 }
 
-socket.on('chatMessage', function (from, msg,room) {
+socket.on('chatMessage', function (from, msg) {
     var me = $('#user').text();
     var c = (from == me) ? 'self' : 'other';
     var f = (from == me) ? 'Me' : from;
 
-    var d = new Date(); // for now
+    var d = new Date(); 
     var t = d.getHours() + ':' + d.getMinutes();
 
     var text=  '<li class="' +c +'"> <div class="msg"> <h>'+ f+ '</h> <p>'+msg+'</p> <time>'+t+'</time> </div> </li>';
@@ -127,8 +126,8 @@ socket.on('chatMessage', function (from, msg,room) {
 
 });
 
-socket.on('notifyUser', function(user,room){
-    //var me = $('#user').val();
+socket.on('notifyUser', function(user){
+
     if(user != name) {
         $('#notifyUser').text(user + ' is typing ...');
     }
@@ -137,13 +136,9 @@ socket.on('notifyUser', function(user,room){
 
 socket.on('room', function (roomid) {
     room=roomid;
-    //alert(room)
     console.log('received room id' + roomid)
     $('#url').text("http://localhost:3000/room/"+room);
-    /*var u= $('#um').val();
-    var s = u + 'joined the room';
-    socket.emit('chatMessage','system',s,room);*/
-
+  
 });
 
 
@@ -151,7 +146,7 @@ function submitfunction(){
     var from = $('#user').text();
     var message= $('#m').val();
     if(message != ''){
-        socket.emit('chatMessage',from,message,room); //send to server on chatMessage
+        socket.emit('chatMessage',from,message); //send to server on chatMessage
     }
     $('#m').val('').focus();
 
@@ -160,7 +155,7 @@ function submitfunction(){
 }
 
 function notifyTyping(){
-    socket.emit('notifyUser' ,name,room);
+    socket.emit('notifyUser' ,name);
 }
 
 function makeid() {

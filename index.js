@@ -19,7 +19,6 @@ app.get('/', function(req, res){
     app.use(express.static(path.join(__dirname),'/assets'));
 
    req_id="newroom";
-   console.log('new request, req id= '+ req_id);
     res.sendFile(path.join(__dirname, '/index.html'));
 
 });
@@ -28,7 +27,6 @@ app.get('/room/:roomid', function(req, res){
     app.use(express.static(path.join(__dirname),'/assets'));
 
     req_id=req.params.roomid;
-        console.log('existing req_id is null ' + req_id );
     var x= false;
     for(i=0; i<rooms.length; i++){
         if(rooms[i]===req_id){
@@ -53,8 +51,7 @@ io.on('connection', function(socket){
 
     if(req_id !== "newroom"){
         room_id=req_id //existing room
-        console.log('req_id = '+ req_id);
-        console.log('joined existing room')
+  
 
         MongoClient.connect(url, function(err, db) {
 
@@ -62,11 +59,10 @@ io.on('connection', function(socket){
             var cursor = db.collection(coll).find({room:room_id});
             cursor.forEach(function(path,err){
                 paths.push(path.path);
-                console.log(path.room);
             }, function(){
                 db.close();
                 for (var i in paths) {
-                    socket.emit('savedPaths',paths[i],room_id);
+                    socket.emit('savedPaths',paths[i]);
                 }
                 paths=[];
             });
@@ -78,7 +74,7 @@ io.on('connection', function(socket){
             }, function(){
                 db.close();
                 for (var i in chats) {
-                    socket.emit('chatMessage',chats[i].from, chats[i].msg, chats[i].room);
+                    socket.emit('chatMessage',chats[i].from, chats[i].msg);
                 }
                 chats=[];
             });
@@ -96,36 +92,36 @@ io.on('connection', function(socket){
 
 
     socket.on('chatMessage', function(from, msg,room){
-        io.sockets.in(room).emit('chatMessage', from, msg,room);
+        io.sockets.in(socket.room).emit('chatMessage', from, msg);
         MongoClient.connect(url, function(err, db) {
             if(err) { return console.dir(err); }
 
             var collection = db.collection(coll2);
 
-            collection.insert({'from':from, 'msg':msg, 'room':room});
+            collection.insert({'from':from, 'msg':msg, 'room':socket.room});
 
         });
 
     });
-    socket.on('notifyUser', function(user,room){
-        io.sockets.in(room).emit('notifyUser', user,room);
+    socket.on('notifyUser', function(use){
+        io.sockets.in(socket.room).emit('notifyUser', user);
     });
 
     socket.on('StartingPoint',function(data){
 
-        socket.in(data.room).broadcast.emit('newDrawing', data);
+        socket.in(socket.room).broadcast.emit('newDrawing', data);
 
 
     });
     socket.on('Continue',function(data){
 
-        socket.in(data.room).broadcast.emit('ContinueDrawing', data);
+        socket.in(socket.room).broadcast.emit('ContinueDrawing', data);
 
 
     });
     socket.on('EndPoint',function(data){
         
-        socket.in(data.room).broadcast.emit('StopDrawing', data);
+        socket.in(socket.room).broadcast.emit('StopDrawing', data);
 
         console.log('received end point');
         MongoClient.connect(url, function(err, db) {
@@ -133,7 +129,7 @@ io.on('connection', function(socket){
 
             var collection = db.collection(coll);
 
-            collection.insert({'path':data.path,'room':data.room});
+            collection.insert({'path':data.path,'room':socket.room});
 
         });
 
