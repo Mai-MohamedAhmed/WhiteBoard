@@ -3,10 +3,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
-
-
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/exampleDb';
+var url = 'mongodb://localhost:27017/Db';
 var coll = 'paths';
 var coll2='chats';
 var paths = [];
@@ -46,33 +44,31 @@ app.get('/room/:roomid', function(req, res){
 
 // Register events on socket connection
 io.on('connection', function(socket){
-
     var room_id
 
     if(req_id !== "newroom"){
         room_id=req_id //existing room
-  
-
+  	//Getting the room data for the new connecting client from the database
         MongoClient.connect(url, function(err, db) {
-
+	//Getting the drawing data
             console.log("getting data of room " +room_id);
-            var cursor = db.collection(coll).find({room:room_id});
-            cursor.forEach(function(path,err){
+            var cursorDraw = db.collection(coll).find({room:room_id});
+            cursorDraw.forEach(function(path,err){
                 paths.push(path.path);
             }, function(){
-                db.close();
                 for (var i in paths) {
                     socket.emit('savedPaths',paths[i]);
                 }
                 paths=[];
             });
-
-            var cursor = db.collection(coll2).find({room:room_id});
-            cursor.forEach(function(myDoc,err){
+	//Getting the chat data
+            var cursorChat = db.collection(coll2).find({room:room_id});
+            cursorChat.forEach(function(myDoc,err){
                 chats.push(myDoc);
 
             }, function(){
                 db.close();
+	//Sending the chat data
                 for (var i in chats) {
                     socket.emit('chatMessage',chats[i].from, chats[i].msg);
                 }
@@ -93,6 +89,7 @@ io.on('connection', function(socket){
 
     socket.on('chatMessage', function(from, msg,room){
         io.sockets.in(socket.room).emit('chatMessage', from, msg);
+//Insert Chat message into the database
         MongoClient.connect(url, function(err, db) {
             if(err) { return console.dir(err); }
 
@@ -124,6 +121,7 @@ io.on('connection', function(socket){
         socket.in(socket.room).broadcast.emit('StopDrawing', data);
 
         console.log('received end point');
+	//Insert drawn path into the database
         MongoClient.connect(url, function(err, db) {
             if(err) { return console.dir(err); }
 
