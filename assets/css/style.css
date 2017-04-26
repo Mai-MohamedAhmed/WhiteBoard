@@ -23,6 +23,7 @@ Primary style
 
 html {
   font-size: 62.5%;
+  
 }
 
 body {
@@ -82,7 +83,6 @@ Stretchy Nav style - common to:
   height: 100%;
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
 }
-
 .cd-nav-trigger {
   position: absolute;
   z-index: 3;
@@ -97,6 +97,7 @@ Stretchy Nav style - common to:
   color: transparent;
   pointer-events: auto;
 }
+
 .cd-nav-trigger span, .cd-nav-trigger span::after, .cd-nav-trigger span::before {
   /* this is the hamburger icon */
   position: absolute;
@@ -187,6 +188,15 @@ Stretchy Nav style - common to:
   -moz-transition: color 0.2s;
   transition: color 0.2s;
 }
+.pensize ul a::after{
+   background: url(../cd-sprite-3.svg) no-repeat 0 0;
+}
+.penstyle ul a::after{
+   background: url(../cd-sprite-2.svg) no-repeat 0 0;
+}
+.menuuu ul a::after{
+   background: url(../cd-sprite-1.svg) no-repeat 0 0;
+}
 .cd-stretchy-nav ul a::after {
   /* navigation item icons */
   content: '';
@@ -201,8 +211,8 @@ Stretchy Nav style - common to:
   -o-transform: translateY(-50%) scale(0);
   transform: translateY(-50%) scale(0);
   opacity: .6;
-  background: url(../cd-sprite-1.svg) no-repeat 0 0;
 }
+
 .cd-stretchy-nav ul a::before {
   /* line visible next to the active navigation item */
   content: '';
@@ -229,10 +239,10 @@ Stretchy Nav style - common to:
   background-position: -16px 0;
 }
 .cd-stretchy-nav ul li:nth-of-type(4) a::after {
-  background-position: 64 0;
+  background-position: -48px 0;
 }
 .cd-stretchy-nav ul li:nth-of-type(5) a::after {
-  background-position: -48px 0;
+  background-position: -64px 0;
 }
 .cd-stretchy-nav ul span {
   /* navigation item labels */
@@ -426,3 +436,29 @@ keyframes
     transform: translateX(0);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

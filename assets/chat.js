@@ -38,15 +38,10 @@ window.onload = function() {
     tool.onMouseDown = function(event) {
         path = new Path();
 
-        /*path.fillColor = {
-         hue: Math.random() * 360,
-         saturation: 1,
-         brightness: 1
-         };*/
         path.strokeColor = Color;
 		path.strokeWidth=Width;
         path.add(event.point);
-        //event.preventDefault();
+       
         socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth});
     }
 
@@ -58,14 +53,15 @@ window.onload = function() {
         socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth });
 
     }
-    tool.onMouseUp= function(event) {
+ 
+   tool.onMouseUp= function(event) {
         path.add(event.point);
+		path.smooth();
         var p = path.exportJSON();
         socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"path":p});
-        path.smooth();
         console.log('sending end point' + event.point.x +' '+  event.point.y);
     }
-
+   
     socket.on('newDrawing',function(data){
         Otherpaths[data.ID]=new Path();
         Otherpaths[data.ID].strokeColor = data.Color;
@@ -104,15 +100,35 @@ window.onload = function() {
 
 
 }
-function erase() {
-	Color="White"
+function small() {
+	Width=5
+}
+function medium() {
+	Width=10
+}
+function large() {
 	Width=20
 }
-function pencil() {
+function erase() {
+	Color="White"
+}
+function BLACK() {
 	Color="black"
-	Width=1
+}
+function BLUE() {
+	Color="blue"
+}
+function RED() {
+	Color="red"
+}
+function GREEN() {
+	Color="green"
+}
+function YELLOW() {
+	Color="yellow"
 }
 
+//on receiving a chat message from server, display it
 socket.on('chatMessage', function (from, msg) {
     var me = $('#user').text();
     var c = (from == me) ? 'self' : 'other';
@@ -126,14 +142,7 @@ socket.on('chatMessage', function (from, msg) {
 
 });
 
-socket.on('notifyUser', function(user){
-
-    if(user != name) {
-        $('#notifyUser').text(user + ' is typing ...');
-    }
-    setTimeout(function(){ $('#notifyUser').text(''); }, 10000);;
-});
-
+//on receiving assigned room id from server add link to room
 socket.on('room', function (roomid) {
     room=roomid;
     console.log('received room id' + roomid)
@@ -141,7 +150,7 @@ socket.on('room', function (roomid) {
   
 });
 
-
+//send chat message to server
 function submitfunction(){
     var from = $('#user').text();
     var message= $('#m').val();
@@ -154,9 +163,7 @@ function submitfunction(){
 
 }
 
-function notifyTyping(){
-    socket.emit('notifyUser' ,name);
-}
+//generate a random id to the user if ther didn't enter their name
 
 function makeid() {
     var text = "";

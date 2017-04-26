@@ -32,7 +32,7 @@ header{
   text-align: center;
   width: 61px;
   height: 61px;
-  padding: 10px 16px;
+  padding: 10px;
   font-size: 24px;
   line-height: 1.33;
   border-radius: 35px;
@@ -43,7 +43,7 @@ header{
 
   background: #9acd91;
   color:#ffffff;
-  border-color:  #9acd91;
+  border-color:  transparent;
   transition: all .2s ease-in-out;
    
   position: fixed;
@@ -54,11 +54,12 @@ header{
 
 .btn-circle.btn-xl:hover, .btn-circle.btn-xl:focus, .btn-circle.btn-xl:active{
   background: #9acd91;
-  border-color: #9acd91;
+  border: transparent;
+  outline: 0;
   color:#ffffff;
   transition-duration: 0.2s;
-   transition-property: transform;
- transform: matrix(1.1, 0, 0, 1.1, 5, -5);
+  transition-property: transform;
+  transform: matrix(1.1, 0, 0, 1.1, 5, -5);
 }
 .hvr-grow {
   display: inline-block;

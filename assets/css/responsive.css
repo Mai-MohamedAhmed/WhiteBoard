@@ -1,0 +1,76 @@
+
+
+/*smartphone*/
+@media screen and (min-width: 320px) {
+	#welcome_popup{
+	height:100px; 
+	width:280px;
+	top:250px;
+	left:20px
+	}
+	#popup{
+	height:100px; 
+	width:280px;
+	top:250px;
+	left:20px;
+	}
+
+    .btn-circle.btn-xl{
+    	right: 20%;
+    }
+    .pensize{
+    	right: 45%;
+    }
+    .penstyle{
+    	right: 65%;
+    }
+}
+/*tablet*/
+@media screen and (min-width: 700px ) {
+	#welcome_popup{
+	height:100px; 
+	width:350px;
+	top:250px;
+	left:200px;
+	}
+	#popup{
+	height:100px; 
+	width:350px;
+	 top:250px;
+	 left:200px;
+	}
+     .btn-circle.btn-xl{
+    	right: 15%;
+    }
+    .pensize{
+    	right: 30%;
+    }
+    .penstyle{
+    	right: 45%;
+    }
+}
+/*desktop*/
+@media screen and (min-width: 1300px) {
+	#welcome_popup{
+	height:100px; 
+	width:350px;
+	top:250px;
+	left:500px;
+	}
+	#popup{
+	height:100px; 
+	width:350px;
+	 top:250px;
+	 left:500px;
+	}
+     .btn-circle.btn-xl{
+    	right: 9%;
+    }
+    .pensize{
+    	right: 16%;
+    }
+    .penstyle{
+    	right: 22%;
+    }
+}
+

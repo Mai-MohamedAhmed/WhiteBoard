@@ -9,6 +9,23 @@
     overflow-x: hidden;
  }
 
+#hidechev{
+    display: inline-block;
+     color: white;
+      float:right;
+       font-size: 20px;
+}
+#lowerChat{
+    top:90vh;
+    position: sticky;
+      background-color: #9acd91;
+      padding-bottom: 15px;
+}
+#upperChat{
+    position: sticky;
+    top:0px;
+    background-color: #9acd91;
+}
 /* Toggle Styles */
 
 #wrapper {
@@ -62,7 +79,7 @@
 
 .sidebar-nav {
     position: sticky;
-    top: 0;
+    
     width: 250px;
     margin: 0;
     padding: 0;
