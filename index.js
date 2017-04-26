@@ -90,7 +90,6 @@ io.on('connection', function(socket){
 
 //client sent a message
     socket.on('chatMessage', function(from, msg,room){
-<<<<<<< HEAD
         io.sockets.in(socket.room).emit('chatMessage', from, msg); //send message to other clients in the same room
         MongoClient.connect(url, function(err, db) { //Insert Chat message into the database
             if(err) { return console.dir(err); }
