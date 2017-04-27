@@ -3,8 +3,9 @@ var room
 var name
 var socket=io.connect();
 var Color,Width
+// Make the paper scope global, by injecting it into window
 paper.install(window);
-window.onload = function() {
+window.onload = function() {   // executed the code once the DOM is ready
 
 	//get user name from prompt
 	$("#sub").click(function(e) {
@@ -29,77 +30,72 @@ window.onload = function() {
     });
 
 
-
+	// Create an empty project and a view for the canvas
     paper.setup('myCan');
     var path,Otherpaths={};
     // Create a simple drawing tool:
     var tool = new Tool();
-    // Define a mousedown and mousedrag handler
+    // Define a mouseDown , mouseDrag and mouseUp handler
     tool.onMouseDown = function(event) {
-        path = new Path();
-
-        path.strokeColor = Color;
-		path.strokeWidth=Width;
-        path.add(event.point);
-       
+        path = new Path();                    // Create a new path
+        path.strokeColor = Color;             // Set the color to the current selected color
+		path.strokeWidth=Width;               // Set the thickness to the current selected width
+        path.add(event.point);                // Add the point to the path and draw it
+		path.smooth();
+		// Send this point to the server
         socket.emit('StartingPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth});
     }
 
     tool.onMouseDrag = function(event) {
-        path.add(event.point);
+        path.add(event.point);                // Add the point to the path and draw it
         path.smooth();
-        event.preventDefault();
-
+		// Send this point to the server
         socket.emit('Continue',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth });
 
     }
  
    tool.onMouseUp= function(event) {
-        path.add(event.point);
+        path.add(event.point);                // Add the point to the path and draw it
 		path.smooth();
         var p = path.exportJSON();
+		// Send this point to the server
+		// send the path to the server to insert it in the database
         socket.emit('EndPoint',{"pointX":event.point.x,"pointY":event.point.y,"ID":ID,"Color":path.strokeColor,"Width":path.strokeWidth,"path":p});
-        console.log('sending end point' + event.point.x +' '+  event.point.y);
     }
+   // Receive messages from the server
    
-    socket.on('newDrawing',function(data){
-        Otherpaths[data.ID]=new Path();
-        Otherpaths[data.ID].strokeColor = data.Color;
-        Otherpaths[data.ID].strokeWidth = data.Width;
-        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
+    socket.on('newDrawing',function(data){                                      // Receive a point in a new path
+        Otherpaths[data.ID]=new Path();                                        // Create a new path in Otherpaths[SenderID]
+        Otherpaths[data.ID].strokeColor = data.Color;                          // Set the color 
+        Otherpaths[data.ID].strokeWidth = data.Width;                          // Set the thickness
+        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));     // Add the point to the path and draw it
         Otherpaths[data.ID].smooth();
         view.draw();
     });
-    socket.on('ContinueDrawing',function(data){
-
-        Otherpaths[data.ID].strokeColor = data.Color;
-		Otherpaths[data.ID].strokeWidth = data.Width;
-        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
+    socket.on('ContinueDrawing',function(data){                                // Receive a point in a path
+        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));         // Add the point to the path and draw it
         Otherpaths[data.ID].smooth();
         view.draw();
     });
-    socket.on('StopDrawing',function(data){
-        Otherpaths[data.ID].strokeColor = data.Color;
-		Otherpaths[data.ID].strokeWidth = data.Width;
-        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));
+    socket.on('StopDrawing',function(data){                                    // Receive an end point of a path
+        Otherpaths[data.ID].add(new paper.Point(data.pointX,data.pointY));           // Add the point to the path and draw it
         Otherpaths[data.ID].smooth();
         view.draw();
-        delete Otherpaths[data.ID];
+        delete Otherpaths[data.ID];                                                  // Delete this path from Otherpaths array 
     });
 
+	//Receive old paths for the new connecting client
     socket.on('savedPaths',function(data){
-
         var p = new Path();
         p.importJSON(data);
         project.activeLayer.addChild(p);
         view.draw();
         console.log('received path from room id '+ socket.room);
-
-
     });
 
 
 }
+// Change the thickness
 function small() {
 	Width=5
 }
@@ -109,6 +105,7 @@ function medium() {
 function large() {
 	Width=20
 }
+//Change the color
 function erase() {
 	Color="White"
 }
