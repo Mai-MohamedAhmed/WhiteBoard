@@ -88,7 +88,7 @@ io.on('connection', function(socket){
     socket.room=room_id;
 
 
-//client sent a message
+//client sent a Chat message
     socket.on('chatMessage', function(from, msg,room){
         io.sockets.in(socket.room).emit('chatMessage', from, msg); //send message to other clients in the same room
         MongoClient.connect(url, function(err, db) { //Insert Chat message into the database
@@ -102,37 +102,27 @@ io.on('connection', function(socket){
 
     });
   
+//client sent a Drawing message
 
-    socket.on('StartingPoint',function(data){
-
-        socket.in(socket.room).broadcast.emit('newDrawing', data);
-
-
+    socket.on('StartingPoint',function(data){                                             // First point in a path
+        socket.in(socket.room).broadcast.emit('newDrawing', data);                        // broadcast the message to other clients in the same room
     });
-    socket.on('Continue',function(data){
-
-        socket.in(socket.room).broadcast.emit('ContinueDrawing', data);
-
-
+	
+    socket.on('Continue',function(data){                                                  // Other points in a path
+        socket.in(socket.room).broadcast.emit('ContinueDrawing', data);                   // broadcast the message to other clients in the same room
     });
-    socket.on('EndPoint',function(data){
-        
-        socket.in(socket.room).broadcast.emit('StopDrawing', data);
+    socket.on('EndPoint',function(data){                                                  // Last point in a path
+        socket.in(socket.room).broadcast.emit('StopDrawing', data);                       // broadcast the message to other clients in the same room
 
         console.log('received end point');
-	//Insert drawn path into the database
+		
+		//Insert drawn path into the database
         MongoClient.connect(url, function(err, db) {
             if(err) { return console.dir(err); }
-
             var collection = db.collection(coll);
-
             collection.insert({'path':data.path,'room':socket.room});
-
         });
-
     });
-
-
 });
 
 // Listen to application request on port 3000
